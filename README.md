@@ -2,17 +2,19 @@
 
 Цей репозиторій містить публічну документацію, специфікації OpenAPI (Swagger) та інструкції з інтеграції для кастомних модулів Odoo 19.
 
-## 📦 Модулі в екосистемі
+## 🗺 Дорожня карта розробки (Roadmap)
 
-| Модуль | Опис | Статус |
-| :--- | :--- | :--- |
-| **`core_api_connector`** | REST API ендпоінти для CRM, Каталогу та Замовлень | 🟢 Active |
-| **`stock_sync_connector`** | Синхронізація складських залишків | 🟡 Planned |
-| **`telegram_bot_notifier`** | Сповіщення про нові замовлення у Telegram | 🟡 Planned |
+- [x] **`core_api_connector`** — REST API для CRM, Каталогу товарів та Замовлень.
+- [ ] **`nova_poshta_connector`** — Інтеграція з Новою Поштою (генерація ТТН, трекінг, відділення).
+- [ ] **`telegram_bot_notifier`** — Telegram-бот для сповіщень та оперативного управління замовленнями.
+- [ ] **`telephony_connector`** — Інтеграція з IP-АТС (Binotel/Ringostat), авто-картка клієнта при дзвінку.
+- [ ] **`stock_sync_connector`** — Синхронізація складських залишків із маркетплейсами (Prom, Rozetka).
+- [ ] **`prro_tax_connector`** — Автоматична фіскалізація чеків (ПРРО Checkbox / Вчасно).
+- [ ] **`payment_gateway_ukraine`** — Еквайринг та авто-звірка платежів (Monobank / LiqPay).
 
----
 
-## 🚀 Швидкий старт (Core API Connector)
+
+Швидкий старт (Core API Connector)
 
 Базовий URL для локального середовища: `http://localhost:8069/api/v1`
 
