@@ -1,0 +1,132 @@
+openapi: 3.0.3
+info:
+  title: Odoo 19 Custom Modules & API Ecosystem
+  description: Public documentation for custom Odoo 19 modules, REST APIs, and external integrations.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8069/api/v1
+    description: Local Development Server
+
+tags:
+  - name: Core API Connector
+    description: REST API endpoints for CRM, Catalog, and Sales
+  - name: Inventory & Warehouse
+    description: Stock management and synchronization (Upcoming)
+  - name: Custom Integrations
+    description: Third-party service webhooks (Upcoming)
+
+paths:
+  /ping:
+    get:
+      tags:
+        - Core API Connector
+      summary: Healthcheck endpoint
+      responses:
+        '200':
+          description: Service is active
+
+  /lead/create:
+    post:
+      tags:
+        - Core API Connector
+      summary: Create CRM Lead
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              name: Serhii Hanzhela
+              phone: '+380501112233'
+              email: serhii@example.com
+              description: Interested in services
+      responses:
+        '201':
+          description: Lead created
+
+  /products:
+    get:
+      tags:
+        - Core API Connector
+      summary: Fetch Product Catalog
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: Product list returned
+
+  /sale_order/create:
+    post:
+      tags:
+        - Core API Connector
+      summary: Create Sale Order
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              customer:
+                name: Dmytro Petrenko
+                phone: '+380971112233'
+                email: dmytro@example.com
+              items:
+                - product_id: 5
+                  qty: 1
+      responses:
+        '201':
+          description: Sale Order created
+
+  /sale_order/{order_id}:
+    get:
+      tags:
+        - Core API Connector
+      summary: Get Sale Order Details & Status
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Order details returned
+
+  /sale_order/confirm:
+    post:
+      tags:
+        - Core API Connector
+      summary: Confirm Sale Order (Quotation -> Sales Order)
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              order_id: 26
+      responses:
+        '200':
+          description: Order confirmed
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
