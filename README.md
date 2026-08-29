@@ -2,6 +2,13 @@
 
 Цей репозиторій містить публічну документацію, специфікації OpenAPI (Swagger) та інструкції з інтеграції для кастомних модулів Odoo 19.
 
+# Odoo 19 Custom Ecosystem & API Documentation
+
+🚀 **[ВІДКРИТИ ІНТЕРАКТИВНИЙ SWAGGER UI](https://berluskuni.github.io/odoo-api-docs/docs/)**
+
+---
+
+
 ## 🗺 Дорожня карта розробки (Roadmap)
 
 - [x] **`core_api_connector`** — REST API для CRM, Каталогу товарів та Замовлень.
