@@ -1,22 +1,26 @@
 openapi: 3.0.3
 info:
   title: Odoo 19 Custom Modules & API Ecosystem
-  description: Public documentation for custom Odoo 19 modules, REST APIs, and external integrations.
+  description: Public documentation for custom Odoo 19 modules, REST APIs, and external integration webhooks.
   version: 1.0.0
 servers:
-  - url: http://localhost:8069/api/v1
+  - url: http://localhost:8069
     description: Local Development Server
 
 tags:
   - name: Core API Connector
     description: REST API endpoints for CRM, Catalog, and Sales
-  - name: Inventory & Warehouse
-    description: Stock management and synchronization (Upcoming)
-  - name: Custom Integrations
-    description: Third-party service webhooks (Upcoming)
+  - name: Delivery & Logistics
+    description: Nova Poshta shipping labels and tracking integrations
+  - name: Notifications
+    description: Telegram bot notifications and alert routing
+  - name: Telephony Connector
+    description: IP-PBX incoming call webhooks and CRM automation
+  - name: Marketplace & Stock Sync
+    description: Stock level synchronization and external order import
 
 paths:
-  /ping:
+  /api/v1/ping:
     get:
       tags:
         - Core API Connector
@@ -25,7 +29,7 @@ paths:
         '200':
           description: Service is active
 
-  /lead/create:
+  /api/v1/lead/create:
     post:
       tags:
         - Core API Connector
@@ -37,15 +41,15 @@ paths:
         content:
           application/json:
             example:
-              name: Serhii Hanzhela
+              name: Client Name
               phone: '+380501112233'
-              email: serhii@example.com
+              email: client@example.com
               description: Interested in services
       responses:
         '201':
           description: Lead created
 
-  /products:
+  /api/v1/products:
     get:
       tags:
         - Core API Connector
@@ -67,7 +71,7 @@ paths:
         '200':
           description: Product list returned
 
-  /sale_order/create:
+  /api/v1/sale_order/create:
     post:
       tags:
         - Core API Connector
@@ -90,7 +94,7 @@ paths:
         '201':
           description: Sale Order created
 
-  /sale_order/{order_id}:
+  /api/v1/sale_order/{order_id}:
     get:
       tags:
         - Core API Connector
@@ -107,7 +111,7 @@ paths:
         '200':
           description: Order details returned
 
-  /sale_order/confirm:
+  /api/v1/sale_order/confirm:
     post:
       tags:
         - Core API Connector
@@ -123,6 +127,60 @@ paths:
       responses:
         '200':
           description: Order confirmed
+
+  /telephony/webhook/event:
+    post:
+      tags:
+        - Telephony Connector
+      summary: Process incoming IP-PBX call event
+      parameters:
+        - name: X-Odoo-Database
+          in: header
+          required: false
+          schema:
+            type: string
+            example: odoo_dev
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              jsonrpc: "2.0"
+              params:
+                external_call_id: "TEL-998812"
+                phone: "+380671112233"
+                call_type: "missed"
+                duration: 0
+      responses:
+        '200':
+          description: Call logged and CRM lead created (if missed)
+
+  /marketplace/webhook/order:
+    post:
+      tags:
+        - Marketplace & Stock Sync
+      summary: Receive external order from Prom/Rozetka
+      parameters:
+        - name: X-Odoo-Database
+          in: header
+          required: false
+          schema:
+            type: string
+            example: odoo_dev
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              jsonrpc: "2.0"
+              params:
+                sku: "PROM-ITEM-101"
+                quantity: 2
+                customer_name: "Ivan Petrenko"
+                phone: "+380679998877"
+      responses:
+        '200':
+          description: Sale order successfully created in Odoo
 
 components:
   securitySchemes:
