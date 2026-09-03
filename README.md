@@ -4,7 +4,7 @@
 
 # Odoo 19 Custom Ecosystem & API Documentation
 
-🚀 **[ВІДКРИТИ ІНТЕРАКТИВНИЙ SWAGGER UI](https://berluskuni.github.io/odoo-api-docs/docs/)**
+🚀 **[ВІДКРИТИ ІНТЕРАКТИВНИЙ SWAGGER UI](https://berluskuni.github.io/odoo-api-docs/)**
 
 ---
 
