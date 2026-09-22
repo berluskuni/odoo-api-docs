@@ -17,7 +17,7 @@
 - [x] **`telephony_connector`** — Інтеграція з IP-АТС (Binotel/Ringostat), авто-картка клієнта при дзвінку.
 - [x] **`stock_sync_connector`** — Синхронізація складських залишків із маркетплейсами (Prom, Rozetka).
 - [ ] **`prro_tax_connector`** — Автоматична фіскалізація чеків (ПРРО Checkbox / Вчасно).
-- [ ] **`payment_gateway_ukraine`** — Еквайринг та авто-звірка платежів (Monobank / LiqPay).
+- [x] **`payment_gateway_ukraine`** — Еквайринг та авто-звірка платежів (Monobank / LiqPay).
 
 ## 📦 Опис модулів
 
@@ -77,6 +77,37 @@
 * **Экспорт остатков:** Автоматический и ручной расчет доступного количества (`qty_available`) и отправка на маркетплейс по SKU.
 * **Импорт заказов (`/marketplace/webhook/order`):** JSON-RPC эндпоинт для авто-создания Заказов покупателей (`sale.order`) и контрагентов.
 * **Журналирование (`marketplace.log`):** Подробный аудит всех попыток синхронизации остатков с сохранением полных ответов API.
+
+
+# Payment Gateway Ukraine (`payment_gateway_ukraine`)
+
+Модуль интеграции платежных шлюзов **Monobank** и **LiqPay** для Odoo 19.
+
+## Функционал
+* Единая вкладка настроек **Ukrainian Payments** в `Settings -> General Settings`.
+* Безопасное хранение ключей и токенов API (`X-Token`, `Public/Private Key`).
+* Генерация ссылок на оплату для заказов продаж (`sale.order`).
+* Обработка входящих вебхуков через JSON-RPC 2.0.
+* Автоматическая смена статуса заказа на `paid` и подтверждение заказа (`sale`).
+* Интеграция с Telegram-нотификатором.
+
+## Тестирование Webhook (Monobank)
+
+```bash
+curl -X POST "http://localhost:8069/payment/monobank/webhook?db=odoo_dev" \
+  -H "Content-Type: application/json" \
+  -H "X-Token: YOUR_MONO_TOKEN" \
+  -d '{
+    "jsonrpc": "2.0",
+    "method": "call",
+    "params": {
+      "order_reference": "S00029",
+      "invoiceId": "mono_tx_55555",
+      "status": "success"
+    },
+    "id": 1
+  }'
+
 
 Швидкий старт (Core API Connector)
 
