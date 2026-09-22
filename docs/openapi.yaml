@@ -10,6 +10,8 @@ servers:
 tags:
   - name: Core API Connector
     description: REST API endpoints for CRM, Catalog, and Sales
+  - name: Payment Gateway Ukraine
+    description: Webhook controllers and integration for Monobank and LiqPay payments
   - name: Delivery & Logistics
     description: Nova Poshta shipping labels and tracking integrations
   - name: Notifications
@@ -127,6 +129,71 @@ paths:
       responses:
         '200':
           description: Order confirmed
+
+  /payment/monobank/webhook:
+    post:
+      tags:
+        - Payment Gateway Ukraine
+      summary: Monobank status webhook callback
+      description: Handles payment status updates from Monobank via JSON-RPC 2.0 protocol and updates Sale Order state.
+      parameters:
+        - name: X-Token
+          in: header
+          required: true
+          description: Secret API Token configured in Odoo Settings
+          schema:
+            type: string
+            example: my_custom_mono_secret_token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              jsonrpc: "2.0"
+              method: "call"
+              params:
+                order_reference: "S00029"
+                invoiceId: "mono_tx_55555"
+                status: "success"
+              id: 1
+      responses:
+        '200':
+          description: Payment processed successfully
+          content:
+            application/json:
+              example:
+                jsonrpc: "2.0"
+                id: 1
+                result:
+                  status: "ok"
+                  order_id: 29
+                  order_status: "sale"
+
+  /payment/liqpay/webhook:
+    post:
+      tags:
+        - Payment Gateway Ukraine
+      summary: LiqPay status webhook callback
+      description: Process status callback from LiqPay with base64 data and SHA1 signature verification.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: string
+                  description: Base64 encoded JSON string with payment parameters
+                signature:
+                  type: string
+                  description: Base64 encoded SHA1 signature
+              required:
+                - data
+                - signature
+      responses:
+        '200':
+          description: LiqPay notification acknowledged (OK)
 
   /telephony/webhook/event:
     post:
